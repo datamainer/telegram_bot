@@ -5,7 +5,7 @@ from bs4 import BeautifulSoup
 import requests
 from time import sleep
 
-TOKEN = '1982714627:AAGxOtxmSnOcXcwYAtA0sDqt-TSBfCEmaUs'
+TOKEN = ''
 
 bot = telebot.TeleBot(TOKEN)
 
