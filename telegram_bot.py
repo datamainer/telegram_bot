@@ -1,9 +1,11 @@
+import random
+
 import telebot
 from bs4 import BeautifulSoup
 import requests
 from time import sleep
 
-TOKEN = ''
+TOKEN = '1982714627:AAGxOtxmSnOcXcwYAtA0sDqt-TSBfCEmaUs'
 
 bot = telebot.TeleBot(TOKEN)
 
@@ -20,10 +22,13 @@ def start(message):
 Cоздание ссылок по никнейму юзера в инстаграм: 
 /instagram
 
+Сгенерировать пароль:
+/create_pass
+
 ''')
 
 
-#########################################
+###################################################################################
 @bot.message_handler(commands=['avito'])
 def avito(message):
     bot.send_message(message.chat.id, 'Поиск по Авито')
@@ -49,7 +54,7 @@ def avito_search(message):
             break
 
 
-##########################################
+####################################################################################
 @bot.message_handler(commands=['youtube'])
 def youtube(message):
     bot.send_message(message.chat.id, 'Поиск по YouTube')
@@ -74,7 +79,7 @@ def youtube_search(message):
             break
 
 
-##########################################
+####################################################################################
 @bot.message_handler(commands=['instagram'])
 def instagram(message):
     bot.send_message(message.chat.id, 'Созадтель ссылок на инст')
@@ -86,6 +91,41 @@ def instagram(message):
 def instagram_search(message):
     url = 'https://www.instagram.com/' + message.text
     bot.send_message(message.chat.id, url)
+
+
+####################################################################################
+@bot.message_handler(commands=['create_pass'])
+def create_pass(message):
+    print('[OK]')
+    bot.send_message(message.chat.id, 'Генерация пароля')
+    sleep(1)
+    msg = bot.send_message(message.chat.id, 'Введите желаемую длину пароля: '
+                                            '\n**Пароль не может быть меньше 6 символов**')
+
+    bot.register_next_step_handler(msg, generate_password)
+
+
+def generate_password(message):
+    try:
+        value = int(message.text)
+    except:
+        msg = bot.send_message(message.chat.id, 'Укажите число!')
+        create_pass(msg)
+
+    if value < 6:
+        value = 6
+
+    letters = 'qwertyuiopasdfghjklzxcvbnmQWERTYUIOPASDFGHJKLZXCVBNM!@$%&*:"?'
+    letters_arr = [_ for _ in letters]
+    password_arr = []
+
+    index = 0
+    while index != value:
+        password_arr.append(random.choice(letters_arr))
+        index += 1
+
+    password = ''.join(password_arr)
+    bot.send_message(message.chat.id, f'Ваш пароль:  {password}')
 
 
 bot.polling()
